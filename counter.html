@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+ 
+
+ #app {
+  font-family: sans-serif;
+  height: auto;
+  place-items: center;
+  width: auto;
+}
+
+.base-timer {
+  position: relative;
+  margin: auto;
+  width: 140px;
+  height: 140px;
+}
+
+.base-timer__svg {
+  transform: scaleX(-1);
+}
+
+.base-timer__circle {
+  fill: none;
+  stroke: none;
+}
+
+.base-timer__path-elapsed {
+  stroke-width: 7px;
+  stroke: grey;
+}
+
+.base-timer__path-remaining {
+  stroke-width: 7px;
+  stroke-linecap: round;
+  transform: rotate(90deg);
+  transform-origin: center;
+  transition: 1s linear all;
+  fill-rule: nonzero;
+  stroke: currentColor;
+}
+
+.base-timer__path-remaining.green {
+  color: rgb(65, 184, 131);
+}
+
+.base-timer__path-remaining.orange {
+  color: orange;
+}
+
+.base-timer__path-remaining.red {
+  color: red;
+}
+
+.base-timer__label {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+}
+
+#app2 {
+  font-family: sans-serif;
+  height: auto;
+  place-items: center;
+  width: auto;
+}
+
+</style>
+
+</head>
+<body>
+
+    <div id="container">
+        <div id="app">
+        </div>
+        <div id="app2">
+        </div>
+    </div>
+    <button id="btnDurdur" type="button">Durdur</button>
+    <button id="btnBaslat" type="button">Baslat</button>
+
+    <button id="btnDurdur2" type="button">Durdur2</button>
+    <button id="btnBaslat2" type="button">Baslat2</button>
+    <script>
+        
+        document.getElementById("btnDurdur").addEventListener("click",function(){
+
+          onTimesUp("app");
+          onTimesUp("app2");
+
+        })
+        document.getElementById("btnDurdur2").addEventListener("click",function(){
+
+        // clearInterval(sayac["app2"].timerInterval);
+        onTimesUp("app2");
+        onTimesUp("app");
+        
+        })
+        document.getElementById("btnBaslat").addEventListener("click",function(){
+          
+          startTimer("app","base-timer-label","base-timer-path-remaining",20,10,5);
+        })
+
+        document.getElementById("btnBaslat2").addEventListener("click",function(){
+          
+          startTimer("app2","base-timer-label2","base-timer-path-remaining2",20,10,5);
+        })
+
+const FULL_DASH_ARRAY = 283;
+
+function colorCodes (warningThreshold,alertThreshold) {
+  return{
+    info: {
+      color: "green"
+    },
+    warning: {
+      color: "orange",
+      threshold: warningThreshold
+    },
+    alert: {
+      color: "red",
+      threshold: alertThreshold
+    }
+  };
+}
+let sayac={};
+
+function onTimesUp(appId) {
+  alert("Bitti"+ appId);
+  clearInterval(sayac[appId].timerInterval);
+  if(sayac[appId].timeLeft > 1){
+    alert("süre bitmedi");
+  }else{
+    alert("süre bitti");
+    clearInterval(sayac[appId].timerInterval);
+  }
+}
+
+function startTimer(appId,lableElementId,elementId,timeLimit,warningThreshold,alertThreshold) {
+  document.getElementById(appId).innerHTML = `
+  <div class="base-timer">
+    <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <g class="base-timer__circle">
+        <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+        <path
+          id="${elementId}"
+          stroke-dasharray="283"
+          class="base-timer__path-remaining ${colorCodes(warningThreshold,alertThreshold).info.color}"
+          d="
+            M 50, 50
+            m -45, 0
+            a 45,45 0 1,0 90,0
+            a 45,45 0 1,0 -90,0
+          "
+        ></path>
+      </g>
+    </svg>
+    <span id="${lableElementId}" class="base-timer__label">${formatTime(
+      timeLimit
+    )}</span>
+  </div>
+  `;
+  sayac[appId]={
+    timePassed:0,
+    timeLeft:timeLimit,
+    timerInterval:null
+  }
+  sayac[appId].timerInterval = setInterval((appId) => {
+    sayac[appId].timePassed = sayac[appId].timePassed += 1;
+    sayac[appId].timeLeft = timeLimit - sayac[appId].timePassed;
+    document.getElementById(lableElementId).innerHTML = formatTime(
+      sayac[appId].timeLeft
+    );
+    setCircleDasharray(elementId,sayac[appId].timeLeft,timeLimit);
+    setRemainingPathColor(elementId,sayac[appId].timeLeft,warningThreshold,alertThreshold);
+
+    if (sayac[appId].timeLeft === 0) {
+      onTimesUp(appId);
+      
+    }
+  }, 1000,appId);
+}
+
+function formatTime(time) {
+  const minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+
+  if (seconds < 10) {
+    seconds = `0${seconds}`;
+  }
+
+  return `${minutes}:${seconds}`;
+}
+
+function setRemainingPathColor(elementId,timeLeft,warningThreshold,alertThreshold) {
+  const { alert, warning, info } = colorCodes(warningThreshold,alertThreshold);
+  if (timeLeft <= alert.threshold) {
+    document
+      .getElementById(elementId)
+      .classList.remove(warning.color);
+    document
+      .getElementById(elementId)
+      .classList.add(alert.color);
+  } else if (timeLeft <= warning.threshold) {
+    document
+      .getElementById(elementId)
+      .classList.remove(info.color);
+    document
+      .getElementById(elementId)
+      .classList.add(warning.color);
+  }
+}
+
+function calculateTimeFraction(timeLeft,timeLimit) {
+  const rawTimeFraction = timeLeft / timeLimit;
+  return rawTimeFraction - (1 / timeLimit) * (1 - rawTimeFraction);
+}
+
+function setCircleDasharray(elementId,timeLeft,timeLimit) {
+  const circleDasharray = `${(
+    calculateTimeFraction(timeLeft,timeLimit) * FULL_DASH_ARRAY
+  ).toFixed(0)} 283`;
+  document
+    .getElementById(elementId)
+    .setAttribute("stroke-dasharray", circleDasharray);
+}
+    </script>
+
+
+
+</body>
+</html>

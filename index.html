@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html lang="en-US" > 
+	<!-- oncontextmenu="return false" mouse sağ tuş engelleme -->
+<head>
+	<meta charset="UTF-8">
+	<title>jQuery.fullscreen example</title>
+	<link rel="stylesheet" href="styles.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="modalstyle.css" type="text/css" media="screen">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="release/jquery.fullscreen.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+</head>
+<body id="body">
+	<div id="main">
+		
+		
+		<div class="example">
+			<div id="fullscreen">
+				<h2>Proje</h2>
+				<p>Bulunduğun tarayıcı <span id="support"> </span> </p>
+					<a href="#" class="requestfullscreen">Tam ekran modu için tıklayınız</a>
+			</div>
+
+			<div id="fullscreen_kutu" class="lightbox">
+				<div id="modalNesne" class="modal fade">
+					<div class="modal-dialog">
+						  <div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title">Tam Ekrana Geçiş</h4>
+							</div>
+							<div class="modal-body">
+								<p>Tam ekrana geçiş yapılacak</p>
+							   
+								<button type="button" id="btnGecis">Geçiş Yap</button>
+								<button type="button" id="btnCik">Çıkış Yap</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="myModal" class="modal">
+
+					<!-- Modal content -->
+					<div class="modal-content">
+					  <span class="close">&times;</span>
+					  <p>Hatalı işlem yaptınız</p>
+					</div>
+				  
+				  </div>
+				<p>Tam ekran kutusu</p>
+				
+				<input type="text"/>
+
+			</div>
+		</div>
+		<div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#modalNesne").modal('show');
+		});
+	</script>
+
+
+	<script type="text/javascript">
+		var modal = document.getElementById("myModal");
+		var span = document.getElementsByClassName("close")[0];
+
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		var element_fullscreenkutu = document.querySelector("#fullscreen_kutu");
+
+		element_fullscreenkutu.addEventListener('fullscreenchange', function() {
+			if(document.fullscreenElement !== null){
+				console.log('Fullscreen modunda');
+			}
+			else{
+				console.log('Fullscreen modunda değil');
+				modal.style.display = "block";
+			}
+				
+		});
+
+		
+		$(function() {
+			// check native support
+			$('#support').text($.fullscreen.isNativelySupported() ? 'destekliyor' : 'desteklemiyor');
+
+			// open in fullscreen
+			$('#fullscreen .requestfullscreen').click(function() {
+				$('#fullscreen_kutu').fullscreen();
+
+				document.onkeydown = function() 
+				{
+					if(event.keyCode==116 || event.keyCode ==9 || event.keyCode==18 || event.keyCode==123 || event.keyCode==122){
+						event.returnValue=false;
+						event.keyCode=0;
+						modal.style.display = "block";
+						
+						return false;
+					}
+					else{
+						return true;
+					}
+				}
+				return false;
+			});
+
+			var kutucuk=document.getElementById("fullscreen_kutu");
+
+			$('#btnGecis').click(function(){
+				$("#modalNesne").modal('hide');
+				kutucuk.style.display="block";
+				kutucuk.fullscreen();
+
+			});
+
+
+			// exit fullscreen
+			// $('#fullscreen .exitfullscreen').click(function() {
+			// 	$.fullscreen.exit();
+			// 	alert("Çıkış yaptınız");
+			// 	return false;
+			// });
+
+		});
+
+
+		// klavyeyi komple kapatıyor	
+
+		// document.onkeydown = function (e) {
+		// return false;
+		// }
+		
+
+	</script>
+
+	<script language="JavaScript1.2">
+		function disableselect(e){
+		return false
+		}
+		function reEnable(){
+		return true
+		}
+		//if ctrl+a
+		document.onselectstart=new Function ("return false")
+		
+		//if ctrl+c
+		// if (window.sidebar){
+		// document.onmousedown=disableselect
+		// document.onclick=reEnable
+		// }
+
+	</script>
+
+	<!-- <script type="text/javascript" charset="utf-8">
+		$(function() {
+			$('.example').each(function() {
+				var $el = $(this);
+
+				$el.find('code').text($el.find('script').text().replace(/\n\t\t\t\t/gm, '\n').replace(/^\n/gm, ''));
+			});
+		});
+	</script> -->
+</body>
+</html>

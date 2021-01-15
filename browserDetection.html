@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</head>
+<body>
+    
+<script>
+    var browser = (function() {
+    var test = function(regexp) {return regexp.test(navigator.userAgent.toLowerCase())}
+    
+    switch (true) {
+        case test(/yabrowser/i): return "Yandex";
+        case test(/edge|edga|edgios|edg/i): return "Microsoft Edge";
+        case test(/trident|msie/i): return "Microsoft Internet Explorer";
+        case test(/firefox|fxios/i): return "Mozilla Firefox";
+        case test(/opr\//i): return "Opera";
+        case test(/ucbrowser/i): return "UC Browser";
+        case test(/samsungbrowser/i): return "Samsung Browser";
+        case test(/chrome/i): return "Google Chrome";
+        case test(/safari/i): return "Apple Safari";
+        default: return "Other";
+    }
+})();
+// console.log(browser)
+alert(browser);
+
+
+</script>
+
+    <!-- <script>
+
+        $(document).ready(function() {	
+        var chrome = /chrome/.test(navigator.userAgent.toLowerCase());
+    	var safari = /safari/.test(navigator.userAgent.toLowerCase());
+        var firefox = /firefox/.test(navigator.userAgent.toLowerCase());
+        var opera = /opr/.test(navigator.userAgent.toLowerCase());
+        var msie = /msie/.test(navigator.userAgent.toLowerCase()) || 
+        /trident/.test(navigator.userAgent.toLowerCase()) || /.net/.test(navigator.userAgent.toLowerCase());
+        var edge = /edge|edga|edgios|edg/.test(navigator.userAgent.toLowerCase());
+        var yandex = /yabrowser/.test(navigator.userAgent.toLowerCase());
+        
+        console.log(edge);
+
+        /* Detect Yandex */
+        if(yandex){
+            alert("You are using Yandex!");
+            safari = false;
+            chrome = false;
+        }
+        
+        /* Detect Opera */
+        if(opera){
+            alert("You are using Opera!");
+            safari = false;
+            chrome = false;
+        }
+        
+        /* Detect Edge */
+        if(edge){
+            alert("You are using Edge!");
+            safari = false;
+            chrome = false;
+        }
+        
+        /* Detect Chrome */
+        if(chrome){
+        	alert("You are using Chrome!");
+            /* Finally, if it is Chrome then jQuery thinks it's 
+               Safari so we have to tell it isn't */
+            safari = false;
+        }
+
+        /* Detect Safari */
+        if(safari){
+            alert("You are using Safari!");
+        }
+        
+         /* Detect Firefox */
+        if(firefox){
+            alert("You are using Firefox!");
+        }
+        
+    
+        /* Detect Internet Explorer */
+        if(msie){
+            alert("You are using Internet Explorer!");
+        }
+        
+    // 	var windows = /win/.test(navigator.platform.toLowerCase());
+    // 	var mac = /mac/.test(navigator.platform.toLowerCase());
+    // 	var linux = /linux/.test(navigator.platform.toLowerCase());
+    //   var iphone = /iphone/.test(navigator.platform.toLowerCase());
+    // 	var android = /android/.test(navigator.platform.toLowerCase());
+    	
+    // 	if(windows) {
+    // 		alert ("You are using Windows");
+    // 	}
+    	
+    // 	if(mac) {
+    // 		alert ("You are using Mac");
+    // 	}
+    	
+    // 	if(linux) {
+    // 		alert ("You are using Linux");
+    // 	}
+      
+    //   if(iphone) {
+    // 		alert ("You are using iPhone");
+    // 	}
+      
+    //   if(android) {
+    // 		alert ("You are using Android");
+    // 	}
+      
+      alert (navigator.userAgent);
+ });
+    </script>  -->
+
+</body>
+</html>

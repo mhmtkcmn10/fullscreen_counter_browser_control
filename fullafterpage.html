@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html lang="en-US" > 
+	<!-- oncontextmenu="return false" mouse sağ tuş engelleme -->
+<head>
+	<meta charset="UTF-8">
+	<title>jQuery.fullscreen example</title>
+	<link rel="stylesheet" href="styles.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="modalstyle.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="release/jquery.fullscreen.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+</head>
+<body id="body">
+	<div id="modalNesne" class="modal fade">
+		<div class="modal-dialog">
+			  <div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Tam Ekrana Geçiş</h4>
+				</div>
+				<div class="modal-body">
+					<p>Tam ekrana geçiş yapılacak</p>
+				   
+					<button type="button" id="btnGecis">Geçiş Yap</button>
+					<button type="button" id="btnCik">Çıkış Yap</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="myModal" class="modal-error">
+	
+		<div class="modal-content-error">
+		  <p>Sekmeler arasında dolanmayınız. Bir defa daha olursa sınavınız iptal edilecek</p>
+		  <button type="button" id="btnSinavDevamEt">Sınava devam et</button>
+		  <button type="button" id="btnSinavCikis">Çıkış Yap</button>
+
+		</div>
+	</div>
+
+
+	<div id="main">
+		<div class="example">
+			<div id="fullscreen">
+				<h2>Proje</h2>
+				<p>Bulunduğun tarayıcı <span id="support"> </span> </p>
+					<a href="#" class="requestfullscreen">Tam ekran modu için tıklayınız</a>
+			</div>
+			
+
+			<div id="fullscreen_kutu" class="lightbox">
+				<div id="myModal1" class="modal-error1">
+					<div class="modal-content-error1">
+					  <p>Yanlış klavye tuşuna bastınız</p>
+					  <button type="button" id="btnKlavyeDevam">Kapat</button>
+					</div>
+				</div>
+				<p>Tam ekran kutusu</p>
+				
+				<input type="text"/>
+
+			</div>
+		</div>
+		<div>
+	</div> 
+
+	<script>
+
+	//Internet connection
+
+	//  var imageAddr = "http://www.tranquilmusic.ca/images/cats/Cat2.JPG" + "?n=" + Math.random();
+	//          var startTime, endTime;
+	//         var downloadSize = 5616998;
+	//          var download = new Image();
+	//          download.onload = function () {
+	//              endTime = (new Date()).getTime();
+	//              showResults();
+	//          }
+	//          startTime = (new Date()).getTime();
+	//          download.src = imageAddr;
+	//          function showResults() {
+	//              var duration = (endTime - startTime) / 1000; //Math.round()
+	//              var bitsLoaded = downloadSize * 8;
+	//             var speedBps = (bitsLoaded / duration).toFixed(2);
+	//              var speedKbps = (speedBps / 1024).toFixed(2);
+	//             var speedMbps = (speedKbps / 1024).toFixed(2);
+	//              alert("Your connection speed is: \n" + 
+	//                  speedBps + " bps\n"   + 
+	//                  speedKbps + " kbps\n" + 
+	//                  speedMbps + " Mbps\n" +
+	//                  navigator.onLine);
+
+				
+	//          }
+
+	// $(document).ready(function(){
+	// 	// $("#modalNesne").modal('show');
+	// 	var test=confirm("Tam ekran moduna geçiyorsunuz");
+	// 	if(test){
+	// 		setFullScreen(true);
+	// 		alert();
+	// 	}else{
+	// 		alert("tam ekrana geçiş yapamıyorsunuz");
+	// 	}
+
+	// });
+
+	// $('#btnGecis').click(function(){
+	// 	$("#modalNesne").modal('hide');
+	// 	setFullScreen(true);
+	// });
+
+	// $('#btnCik').click(function(){
+	// 	$("#modalNesne").modal('hide');
+	// 	alert("Çıkış yaptınız");
+	// });
+
+	$(".requestfullscreen").click(function(){
+		setFullScreen(true);	
+	});
+
+
+	$("#btnKlavyeDevam").click(function(){
+		modal_msg1.style.display="none";
+	});
+
+	var modal_msg1 = document.getElementById("myModal1");
+
+	function klavyeKontrol(){
+		document.onkeydown = function() 
+		{
+			if(event.keyCode==116|| event.keyCode==123 || event.keyCode==122){
+				event.returnValue=false;
+				event.keyCode=0;
+				modal_msg1.style.display="block"
+				return false;
+			}
+			else if(event.keyCode==9|| event.keyCode==18){
+				event.returnValue=false;
+				event.keyCode=0;
+				modal_msg.style.display="block";
+				setFullScreen(false);
+				return false;
+			}
+			else{
+				return true;
+			}
+			
+		}
+	}
+	var kullanici_hak=0;
+
+	var modal_msg = document.getElementById("myModal");
+
+	
+	document.addEventListener('fullscreenchange', exitHandler);
+	document.addEventListener('webkitfullscreenchange', exitHandler);
+	document.addEventListener('mozfullscreenchange', exitHandler);
+	document.addEventListener('MSFullscreenChange', exitHandler);
+
+	function exitHandler() {
+		if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+			modal_msg.style.display="block";
+			kullanici_hak++;
+			
+			$("#btnSinavDevamEt").click(function(){
+				modal_msg.style.display="none";
+				setFullScreen(true);	
+			});
+
+			$("#btnSinavCikis").click(function(){
+				modal_msg.style.display="none";
+				setFullScreen(false);	
+				alert("Sınavdan çıkış yaptınız");
+			});
+			if(kullanici_hak ===2){
+				alert("Sınavınız bitmiştir hakkınızı doldurdunuz !!! Sayfaya yönlendiriliyorsunuz");
+				window.location.href="index2.html";
+			}
+		}
+	}  
+
+	// /** 
+    //  * Pencerenin tam ekran modunda olup olmadığını kontrol eder 
+    //  * @return {Boolean} tam ekran modu 
+    //  */ 
+	 function isInFullScreen(){
+			if(document.fullScreenElement !==undefined){
+				
+				return !!document.fullScreenElement;
+			}
+
+
+			if(document.mozFullScreen !== undefined){
+				return !!document.mozFullScreen;
+			}
+
+
+			if(document.webkitIsFullScreen !== false){
+				console.log("deneme");
+				return !!document.webkitIsFullScreen;
+			}
+
+			if(window['fullScreen'] !== undefined) {
+				
+				return !!window.fullScreen;
+			}
+
+
+			if(window.navigator.standalone !== undefined){
+				
+				return !!window.navigator.standalone;
+			}
+		
+			// 5px height margin, just in case (needed by e.g. IE)
+			var heightMargin = 5;
+			if(Ext.isWebKit && /Apple Computer/.test(navigator.vendor)) {
+				// Safari in full screen mode shows the navigation bar,which is 40px
+				heightMargin = 42;
+			}
+			return screen.width == window.innerWidth &&
+			Math.abs(screen.height - window.innerHeight) < heightMargin;
+	}
+	
+	/** 
+     * Tam ekran moduna / modundan geçiş yapın.
+     * Fare olayı tarafından tetiklenir
+     * 
+     * @param {Boolean} b true / false tam ekran 
+     */ 
+	function setFullScreen(b,element2){
+		klavyeKontrol();
+
+		var doc=document.documentElement;
+		
+		if(element2 !== doc){
+			var element=document.getElementById(element2);
+		}
+		if(element2 === null || element2===undefined){
+			var element = document.documentElement;
+		}
+
+		// var element=document.getElementById("fullscreen_kutu");
+
+		if(b){
+			if (element.requestFullscreen) {
+				element.requestFullscreen();
+			} else if (document.body.requestFullscreen) {
+				document.body.requestFullscreen();
+			} else if (element.mozRequestFullScreen) {
+				element.mozRequestFullScreen();
+			} else if (element.webkitRequestFullscreen) {
+				element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+			} else if (document.body.webkitRequestFullScreen) {
+				document.body.webkitRequestFullScreen();
+			} else if(typeof window.ActiveXObject != "undefined"){
+				// for Internet Explorer
+				var wscript = new ActiveXObject("WScript.Shell");
+				if(wscript != null){
+					wscript.SendKeys("{F11}");
+				}
+			}
+		}else{
+			if (document.cancelFullScreen) {
+				document.cancelFullScreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.webkitCancelFullScreen) {
+				document.webkitCancelFullScreen();
+			} else if(document.exitFullscreen){
+				document.exitFullscreen();
+			} else if(typeof window.ActiveXObject != "undefined"){
+				// for Internet Explorer
+				var wscript = new ActiveXObject("WScript.Shell");
+				if(wscript != null){
+					wscript.SendKeys("{F11}");
+				}
+			}
+		}
+	}
+	/** 
+     * Tam ekran modunu değiştir.
+     * @return {Boolean} yeni tam ekran modu 
+     */ 
+	function toggleFullScreen(){
+		var isInFullScreen = this.isInFullScreen();
+		this.setFullScreen(!isInFullScreen);
+		return this.isInFullScreen();
+	}
+	</script>
+
+</body>
+</html>
